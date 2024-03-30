@@ -9,17 +9,18 @@ namespace BookShoppingCartMvcUI.Services
     public class EmailSender : IEmailSender
     {
         private readonly ILogger _logger;
-        private readonly string _apiKey;
+        private readonly IConfiguration _config;
 
-        public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor,
+        public EmailSender(IConfiguration config,
                            ILogger<EmailSender> logger)
         {
-            _apiKey = optionsAccessor.Value.SendGridKey;
+            _config = config;
             _logger = logger;
         }
 
         public async Task SendEmailAsync(string toEmail, string subject, string message)
         {
+            var _apiKey = _config["AuthMessageSenderOptions:SendGridKey"];
             if (string.IsNullOrEmpty(_apiKey))
             {
                 throw new Exception("Null SendGridKey");

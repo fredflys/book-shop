@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using BookShoppingCartMvcUI.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace BookShoppingCartMvcUI.Controllers
 {
@@ -15,11 +16,11 @@ namespace BookShoppingCartMvcUI.Controllers
     public class CartController : Controller
     {
         private readonly ICartRepository _cartRepo;
-        private readonly string _apiKey;
+        private readonly IConfiguration _config;
 
-        public CartController(IOptions<AuthMessageSenderOptions> optionsAccessor, ICartRepository cartRepo)
+        public CartController(IConfiguration config, ICartRepository cartRepo)
         {
-            _apiKey = optionsAccessor.Value.SendGridKey;
+            _config = config;
             _cartRepo = cartRepo;
         }
         public async Task<IActionResult> AddItem(int bookId, int qty = 1, int redirect = 0)
@@ -57,6 +58,7 @@ namespace BookShoppingCartMvcUI.Controllers
 
         public async Task Execute(string toEmail)
         {
+            var _apiKey = _config["AuthMessageSenderOptions:SendGridKey"];
             var apiKey = _apiKey;
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("jiachzha@gmail.com", "Order Confirmation #");
