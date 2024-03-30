@@ -115,7 +115,7 @@ namespace BookShoppingCartMvcUI
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BookName,AuthorName,Price,Image,GenreId,ImageBytes,ImageName,ImageUrl")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BookName,AuthorName,Price,Image,GenreId")] Book book)
         {
             if (id != book.Id)
             {

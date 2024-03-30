@@ -46,9 +46,17 @@
         @* <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ImageBytes)
         </dd> *@
-        <dd class = "col-sm-10">
-            <img src="data:image/png;base64,@Url.Content(@Model.ImageUrl)" style="width:180px;height:250px"/>
-        </dd>
+        @if (!string.IsNullOrEmpty(Model.ImageUrl)) {
+
+             <dd class = "col-sm-10">
+                <img src="data:image/png;base64,@Url.Content(@Model.ImageUrl)" style="width:180px;height:250px"/>
+            </dd>
+        } else {
+            <dd>
+                <img style="width:180px;height:250px" src="/images/@Model.Image" />
+            </dd>
+        }
+
         @* <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ImageName)
         </dt>
