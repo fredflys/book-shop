@@ -187,6 +187,17 @@ namespace BookShoppingCartMvcUI.Repositories
             return userId;
         }
 
+        public async Task<string> GetUserEmail()
+        {
+            var userId = GetUserId();
+            if (userId == null)
+                throw new Exception("User is not logged in");
 
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new Exception("User not found");
+
+            return user.UserName;
+        }
     }
 }
