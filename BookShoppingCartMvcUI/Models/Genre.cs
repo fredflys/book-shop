@@ -13,4 +13,6 @@ namespace BookShoppingCartMvcUI.Models
         public string GenreName { get; set; }
         public List<Book> Books { get; set; }
     }
+
+
 }
