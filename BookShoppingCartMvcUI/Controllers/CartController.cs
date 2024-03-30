@@ -1,5 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using BookShoppingCartMvcUI.Services;
 
 namespace BookShoppingCartMvcUI.Controllers
 {
@@ -7,9 +15,11 @@ namespace BookShoppingCartMvcUI.Controllers
     public class CartController : Controller
     {
         private readonly ICartRepository _cartRepo;
+        private readonly string _apiKey;
 
-        public CartController(ICartRepository cartRepo)
+        public CartController(IOptions<AuthMessageSenderOptions> optionsAccessor, ICartRepository cartRepo)
         {
+            _apiKey = optionsAccessor.Value.SendGridKey;
             _cartRepo = cartRepo;
         }
         public async Task<IActionResult> AddItem(int bookId, int qty = 1, int redirect = 0)
@@ -43,6 +53,26 @@ namespace BookShoppingCartMvcUI.Controllers
             if (!isCheckedOut)
                 throw new Exception("Something happen in server side");
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task Execute(string toEmail)
+        {
+            var apiKey = _apiKey;
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("jiachzha@gmail.com", "Order Confirmation #");
+            var subject = "Your order has been confirmed";
+            var to = new EmailAddress(toEmail, "Example User");
+            var plainTextContent = "and easy to do anywhere, even with C#";
+            var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
+
+        public async Task<IActionResult> SendMail()
+        {
+            var userEmail = await _cartRepo.GetUserEmail();
+            await Execute(userEmail);
+            return RedirectToAction("GetUserCart");
         }
 
     }
