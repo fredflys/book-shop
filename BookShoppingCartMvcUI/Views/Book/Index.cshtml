@@ -27,6 +27,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.Genre)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageBytes)
+            </th>            
+            @* <th>
+                @Html.DisplayNameFor(model => model.ImageName)
+            </th> *@
+            @* <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th> *@
             <th></th>
         </tr>
     </thead>
@@ -48,6 +57,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Genre.GenreName)
             </td>
+            <td>
+                <img src="data:image/png;base64,@Url.Content(item.ImageUrl)" style="width:50px;height:50px"/>
+            </td>
+            @* <td>
+                @Html.DisplayFor(modelItem => item.ImageBytes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
+            </td> *@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

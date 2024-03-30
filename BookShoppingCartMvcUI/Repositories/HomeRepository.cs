@@ -32,7 +32,8 @@ namespace BookShoppingCartMvcUI.Repositories
                              BookName = book.BookName,
                              GenreId = book.GenreId,
                              Price = book.Price,
-                             GenreName = genre.GenreName
+                             GenreName = genre.GenreName,
+                             ImageUrl = book.ImageUrl,
                          }
                          ).ToListAsync();
             if (genreId > 0)

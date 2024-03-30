@@ -27,5 +27,22 @@ namespace BookShoppingCartMvcUI.Models
         [NotMapped]
         public string GenreName { get; set; }
 
+        public byte[]? ImageBytes {get; set;}
+        public string? ImageName {get; set;}
+        public string? ImageUrl {get; set;}
+
+    }
+
+    public class BookViewModel {
+        public string? BookName { get; set; }
+        public string? AuthorName { get; set; }
+        public double Price { get; set; }
+        public string? Image { get; set; }
+        public int GenreId { get; set; }
+        public byte[]? ImageBytes {get; set;}
+        public string? ImageName {get; set;}
+        public string? ImageUrl {get; set;}
+        public IFormFile? FormFile {get; set;}
+
     }
 }

@@ -45,7 +45,8 @@ namespace BookShoppingCartMvcUI
             return View(book);
         }
 
-        // GET: Book/Create
+        // GET: Book/
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "GenreName");
@@ -55,18 +56,41 @@ namespace BookShoppingCartMvcUI
         // POST: Book/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Create([Bind("Id,BookName,AuthorName,Price,Image,GenreId,ImageBytes,ImageName,ImageUrl")] Book book)
+        // {
+        //     if (ModelState.IsValid)
+        //     {
+        //         _context.Add(book);
+        //         await _context.SaveChangesAsync();
+        //         return RedirectToAction(nameof(Index));
+        //     }
+        //     ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "GenreName", book.GenreId);
+        //     return View(book);
+        // }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BookName,AuthorName,Price,Image,GenreId")] Book book)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(book);
+        public async Task<IActionResult> CreateAsync(BookViewModel item) {
+            if (!ModelState.IsValid) return View();
+            using (var memoryStream = new MemoryStream()) {
+                await item.FormFile.CopyToAsync(memoryStream);
+                var file = new Book() {
+                    BookName = item.BookName,
+                    AuthorName = item.AuthorName,
+                    Price = item.Price,
+                    GenreId = item.GenreId,
+                    ImageBytes = memoryStream.ToArray(),
+                    ImageName = item.ImageName,
+                    ImageUrl = Convert.ToBase64String(memoryStream.ToArray())
+                };
+                _context.Books.Add(file);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "GenreName", book.GenreId);
-            return View(book);
+            
+            ViewData["GenreId"] = new SelectList(_context.Genres, "Id", "GenreName", item.GenreId);
+            return View(item);
         }
 
         // GET: Book/Edit/5
@@ -91,7 +115,7 @@ namespace BookShoppingCartMvcUI
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BookName,AuthorName,Price,Image,GenreId")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BookName,AuthorName,Price,Image,GenreId,ImageBytes,ImageName,ImageUrl")] Book book)
         {
             if (id != book.Id)
             {
