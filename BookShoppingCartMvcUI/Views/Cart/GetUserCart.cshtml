@@ -22,13 +22,18 @@
                 <tr>
                     <td>@item.Book.BookName</td>
                     <td>
-                        @if (string.IsNullOrEmpty(item.Book.Image))
+                        @if (!string.IsNullOrEmpty(item.Book.ImageUrl))
                         {
-                            <img src="/images/NoImage.png" style="width:80px;height:100px" />
+                            <img src="data:image/png;base64,@Url.Content(item.Book.ImageUrl)" style="width:80px;height:100px"
+                                class="card-img-top" alt="..." />
+                        }
+                        else if (!string.IsNullOrEmpty(item.Book.Image))
+                        {
+                            <img style="width:80px;height:100px" src="/images/@item.Book.Image" class="card-img-top" alt="...">
                         }
                         else
                         {
-                            <img src="/images/@item.Book.Image" style="width:80px;height:100px" />
+                            <img style="width:80px;height:100px" src="/images/NoImage.png" class="card-img-top" alt="...">
                         }
                     </td>
                     <td>@item.Book.Genre.GenreName</td>
