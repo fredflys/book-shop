@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+</head>
+<body>
+    <h2>Order Confirmation</h2>
+    <p>Dear Valued Customer,</p>
+    <p>We're excited to inform you that your order has been confirmed. Below are the details of your order:</p>
+    <table border="1">
+        <tr>
+            <th>Order Time</th>
+            <td>{{OrderTime}}</td>
+        </tr>
+        <tr>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+        </tr>
+        {{#each OrderItems}}
+        <tr>
+            <td>{{this.BookName}}</td>
+            <td>{{this.AuthorName}}</td>
+            <td>{{this.Quantity}}</td>
+            <td>{{this.UnitPrice}}</td>
+            <td>{{this.TotalPrice}}</td>
+        </tr>
+        {{/each}}
+        <tr>
+            <th colspan="4">Total</th>
+            <td>{{TotalPrice}}</td>
+        </tr>
+    </table>
+    <p>Thank you for shopping with us!</p>
+</body>
+</html>
