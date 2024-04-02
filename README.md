@@ -9,6 +9,7 @@ This is a simple book shop project for our group assignment!
 ```bash
 dotnet build
 dotnet run
+```
   
 4. How login as admin?  
      username: admin@gmail.com
