@@ -129,7 +129,7 @@ namespace BookShoppingCartMvcUI.Repositories
             return data.Count;
         }
 
-        public async Task<bool> DoCheckout()
+        public async Task<int> DoCheckout()
         {
             using var transaction = _db.Database.BeginTransaction();
             try
@@ -170,13 +170,14 @@ namespace BookShoppingCartMvcUI.Repositories
                 // removing the cartdetails
                 _db.CartDetails.RemoveRange(cartDetail);
                 _db.SaveChanges();
+                var orderId = order.Id;
                 transaction.Commit();
-                return true;
+                return orderId;
             }
             catch (Exception)
             {
-
-                return false;
+                transaction.Rollback();
+                throw;
             }
         }
 
@@ -186,6 +187,14 @@ namespace BookShoppingCartMvcUI.Repositories
             string userId = _userManager.GetUserId(principal);
             return userId;
         }
+        
+        public async Task<Order> GetOrderDetails(int orderId)
+        {
+            return await _db.Orders
+                .Include(o => o.OrderDetail)
+                    .ThenInclude(od => od.Book)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+}
 
         public async Task<string> GetUserEmail()
         {
